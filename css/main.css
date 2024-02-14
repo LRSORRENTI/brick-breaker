@@ -27,10 +27,12 @@ body {
   margin-top: 5px;
   border: 3px solid rgb(153, 255, 0);
   border-radius: 10px;
-  box-shadow: rgb(153, 255, 0) -1px 10px 10px -8px;
+  box-shadow: rgb(0, 0, 0) -1px 10px 10px -8px;
   transition: 0.5s ease;
   font-family: sans-serif;
   font-weight: 900;
+  text-shadow: 1px 1px 2px rgb(153, 255, 0), 0 0 0.1em rgb(230, 251, 199),
+    0 0 0.2em rgb(0, 0, 0);
 }
 
 #canvas {
@@ -43,7 +45,7 @@ body {
   transition: 0.5s ease;
   border: 3px solid rgb(153, 255, 0);
   border-radius: 10px;
-  box-shadow: rgb(153, 255, 0) 5px 12px 22px -10px;
+  box-shadow: rgb(0, 0, 0) 5px 12px 22px -10px;
 }
 
 @media (min-width: 501px) {
