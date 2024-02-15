@@ -64,9 +64,8 @@ function updateBall() {
         }
     }
 }
-// Paddle properties
 var paddle = {
-    x: canvas.width / 2 - 40,
+    x: (canvas.width - 80) / 2,
     y: canvas.height - 30,
     width: 80,
     height: 10,
@@ -202,6 +201,8 @@ function resetGame() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     setBallVelocity();
+    // Reset paddle position
+    paddle.x = (canvas.width - paddle.width) / 2;
     // Reset bricks
     for (var c = 0; c < brickColumnCount; c++) {
         for (var r = 0; r < brickRowCount; r++) {

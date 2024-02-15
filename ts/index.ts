@@ -75,15 +75,13 @@ function updateBall() {
 }
 
 
-// Paddle properties
 const paddle = {
-    x: canvas.width / 2 - 40,
-    y: canvas.height - 30,
-    width: 80,
-    height: 10,
-    dx: 0
-  };
-  
+  x: (canvas.width - 80) / 2, // Set the paddle to start halfway on the x-axis
+  y: canvas.height - 30,
+  width: 80,
+  height: 10,
+  dx: 0
+};
   // Function to draw the paddle
   function drawPaddle() {
     ctx.beginPath();
@@ -235,6 +233,9 @@ function resetGame() {
   ball.y = canvas.height / 2;
   setBallVelocity();
 
+  // Reset paddle position
+  paddle.x = (canvas.width - paddle.width) / 2;
+
   // Reset bricks
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
@@ -246,7 +247,6 @@ function resetGame() {
   gameStarted = false;
   (document.getElementById('startButton') as HTMLButtonElement).style.display = 'block';
 }
-
   // Start the game
   gameLoop();
   
