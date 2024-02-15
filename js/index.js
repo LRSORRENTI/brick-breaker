@@ -1,4 +1,5 @@
 "use strict";
+var _a, _b, _c;
 // DON'T FORGET TO RUN 'tsc --watch' before starting 
 // work
 var canvas = document.getElementById('canvas');
@@ -23,7 +24,13 @@ function drawBall() {
     ctx.fill();
     ctx.closePath();
 }
-// Function to update the ball's position
+function isColliding(ball, brick) {
+    return (ball.x + ball.size > brick.x &&
+        ball.x - ball.size < brick.x + brickWidth &&
+        ball.y + ball.size > brick.y &&
+        ball.y - ball.size < brick.y + brickHeight);
+}
+/// Function to update the ball's position and check for collisions
 function updateBall() {
     ball.x += ball.dx;
     ball.y += ball.dy;
@@ -31,8 +38,28 @@ function updateBall() {
     if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
         ball.dx *= -1;
     }
-    if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+    // Check for collision with the paddle
+    if (ball.y + ball.size > paddle.y &&
+        ball.x > paddle.x &&
+        ball.x < paddle.x + paddle.width) {
         ball.dy *= -1;
+    }
+    // Check for game over
+    if (ball.y + ball.size > canvas.height) {
+        alert('Game Over');
+        document.location.reload();
+    }
+    // Check for collision with bricks
+    for (var c = 0; c < brickColumnCount; c++) {
+        for (var r = 0; r < brickRowCount; r++) {
+            var brick = bricks[c][r];
+            if (brick.status === 1) {
+                if (isColliding(ball, brick)) {
+                    ball.dy *= -1;
+                    brick.status = 0;
+                }
+            }
+        }
     }
 }
 // Paddle properties
@@ -67,6 +94,7 @@ for (var c = 0; c < brickColumnCount; c++) {
     }
 }
 // Function to draw the bricks
+// Function to draw the bricks
 function drawBricks() {
     for (var c = 0; c < brickColumnCount; c++) {
         for (var r = 0; r < brickRowCount; r++) {
@@ -84,6 +112,36 @@ function drawBricks() {
         }
     }
 }
+// Function to set ball velocity based on difficulty
+function setBallVelocity() {
+    var difficulty = document.getElementById('difficulty').value;
+    switch (difficulty) {
+        case 'easy':
+            ball.dx = 3;
+            ball.dy = -3;
+            break;
+        case 'regular':
+            ball.dx = 5;
+            ball.dy = -5;
+            break;
+        case 'hard':
+            ball.dx = 7;
+            ball.dy = -7;
+            break;
+    }
+}
+// Listen for changes in the difficulty selector
+(_a = document.getElementById('difficulty')) === null || _a === void 0 ? void 0 : _a.addEventListener('change', function () {
+    setBallVelocity();
+});
+// Set initial ball velocity based on default difficulty
+setBallVelocity();
+// Listen for changes in the difficulty selector
+(_b = document.getElementById('difficulty')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function () {
+    setBallVelocity();
+});
+// Set initial ball velocity based on default difficulty
+setBallVelocity();
 // Handle user input
 document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight') {
@@ -109,16 +167,45 @@ function updatePaddle() {
         paddle.x = canvas.width - paddle.width;
     }
 }
-// Update the game loop to include drawing and updating the paddle and bricks
+// Game state
+var gameStarted = false;
+// Function to start the game
+function startGame() {
+    gameStarted = true;
+    // Hide the start button
+    document.getElementById('startButton').style.display = 'none';
+}
+// Listen for clicks on the start button
+(_c = document.getElementById('startButton')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', startGame);
+// Check for game over
+if (ball.y + ball.size > canvas.height) {
+    alert('Game Over');
+    setBallVelocity(); // Reset ball velocity for the new game
+    document.location.reload();
+}
+// Check for game over
+if (ball.y + ball.size > canvas.height) {
+    alert('Game Over');
+    gameStarted = false;
+    setBallVelocity(); // Reset ball velocity for the new game
+    // Show the start button again
+    document.getElementById('startButton').style.display = 'block';
+    document.location.reload();
+}
+// Update the game loop to check if the game has started
 function gameLoop() {
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Draw and update the ball, paddle, and bricks
-    drawBall();
-    updateBall();
+    // Draw the paddle and bricks
     drawPaddle();
-    updatePaddle();
     drawBricks();
+    // Update the paddle's position
+    updatePaddle();
+    // Update and draw the ball only if the game has started
+    if (gameStarted) {
+        updateBall();
+        drawBall();
+    }
     // Request the next animation frame
     requestAnimationFrame(gameLoop);
 }

@@ -26,7 +26,16 @@ function drawBall() {
   ctx.closePath();
 }
 
-// Function to update the ball's position
+function isColliding(ball: any, brick: any) {
+  return (
+    ball.x + ball.size > brick.x &&
+    ball.x - ball.size < brick.x + brickWidth &&
+    ball.y + ball.size > brick.y &&
+    ball.y - ball.size < brick.y + brickHeight
+  );
+}
+
+/// Function to update the ball's position and check for collisions
 function updateBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
@@ -35,11 +44,33 @@ function updateBall() {
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
     ball.dx *= -1;
   }
-  if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+  // Check for collision with the paddle
+  if (
+    ball.y + ball.size > paddle.y &&
+    ball.x > paddle.x &&
+    ball.x < paddle.x + paddle.width
+  ) {
     ball.dy *= -1;
   }
-}
+  // Check for game over
+  if (ball.y + ball.size > canvas.height) {
+    alert('Game Over');
+    document.location.reload();
+  }
 
+  // Check for collision with bricks
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const brick = bricks[c][r];
+      if (brick.status === 1) {
+        if (isColliding(ball, brick)) {
+          ball.dy *= -1;
+          brick.status = 0;
+        }
+      }
+    }
+  }
+}
 // Paddle properties
 const paddle = {
     x: canvas.width / 2 - 40,
@@ -77,24 +108,60 @@ const paddle = {
   }
   
   // Function to draw the bricks
-  function drawBricks() {
-    for (let c = 0; c < brickColumnCount; c++) {
-      for (let r = 0; r < brickRowCount; r++) {
-        if (bricks[c][r].status === 1) {
-          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-          bricks[c][r].x = brickX;
-          bricks[c][r].y = brickY;
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = '#0095DD';
-          ctx.fill();
-          ctx.closePath();
-        }
+  // Function to draw the bricks
+function drawBricks() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      if (bricks[c][r].status === 1) {
+        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = '#0095DD';
+        ctx.fill();
+        ctx.closePath();
       }
     }
   }
-  
+}
+// Function to set ball velocity based on difficulty
+function setBallVelocity() {
+  const difficulty = (document.getElementById('difficulty') as HTMLSelectElement).value;
+  switch (difficulty) {
+    case 'easy':
+      ball.dx = 3;
+      ball.dy = -3;
+      break;
+    case 'regular':
+      ball.dx = 5;
+      ball.dy = -5;
+      break;
+    case 'hard':
+      ball.dx = 7;
+      ball.dy = -7;
+      break;
+  }
+}
+
+// Listen for changes in the difficulty selector
+document.getElementById('difficulty')?.addEventListener('change', () => {
+  setBallVelocity();
+});
+
+// Set initial ball velocity based on default difficulty
+setBallVelocity();
+
+
+// Listen for changes in the difficulty selector
+document.getElementById('difficulty')?.addEventListener('change', () => {
+  setBallVelocity();
+});
+
+// Set initial ball velocity based on default difficulty
+setBallVelocity();
+
   // Handle user input
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
@@ -121,22 +188,58 @@ const paddle = {
     }
   }
   
-  // Update the game loop to include drawing and updating the paddle and bricks
-  function gameLoop() {
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-    // Draw and update the ball, paddle, and bricks
-    drawBall();
+ // Game state
+let gameStarted = false;
+
+// Function to start the game
+function startGame() {
+  gameStarted = true;
+  // Hide the start button
+  (document.getElementById('startButton') as HTMLButtonElement).style.display = 'none';
+}
+
+// Listen for clicks on the start button
+document.getElementById('startButton')?.addEventListener('click', startGame);
+
+  // Check for game over
+if (ball.y + ball.size > canvas.height) {
+  alert('Game Over');
+  setBallVelocity(); // Reset ball velocity for the new game
+  document.location.reload();
+}
+
+// Check for game over
+if (ball.y + ball.size > canvas.height) {
+  alert('Game Over');
+  gameStarted = false;
+  setBallVelocity(); // Reset ball velocity for the new game
+  // Show the start button again
+  (document.getElementById('startButton') as HTMLButtonElement).style.display = 'block';
+  document.location.reload();
+}
+
+// Update the game loop to check if the game has started
+function gameLoop() {
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw the paddle and bricks
+  drawPaddle();
+  drawBricks();
+
+  // Update the paddle's position
+  updatePaddle();
+
+  // Update and draw the ball only if the game has started
+  if (gameStarted) {
     updateBall();
-    drawPaddle();
-    updatePaddle();
-    drawBricks();
-  
-    // Request the next animation frame
-    requestAnimationFrame(gameLoop);
+    drawBall();
   }
-  
+
+  // Request the next animation frame
+  requestAnimationFrame(gameLoop);
+}
+
   // Start the game
   gameLoop();
   
