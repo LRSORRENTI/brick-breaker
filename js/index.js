@@ -31,6 +31,7 @@ function isColliding(ball, brick) {
         ball.y - ball.size < brick.y + brickHeight);
 }
 // Function to update the ball's position and check for collisions
+// Function to update the ball's position and check for collisions
 function updateBall() {
     ball.x += ball.dx;
     ball.y += ball.dy;
@@ -50,13 +51,14 @@ function updateBall() {
         resetGame();
     }
     // Check for collision with bricks
-    for (var c = 0; c < brickColumnCount; c++) {
+    brickLoop: for (var c = 0; c < brickColumnCount; c++) {
         for (var r = 0; r < brickRowCount; r++) {
             var brick = bricks[c][r];
             if (brick.status === 1) {
                 if (isColliding(ball, brick)) {
                     ball.dy *= -1;
                     brick.status = 0;
+                    break brickLoop; // Break out of the loop after breaking one brick
                 }
             }
         }
@@ -113,20 +115,21 @@ function drawBricks() {
     }
 }
 // Function to set ball velocity based on difficulty
+// Function to set ball velocity based on difficulty
 function setBallVelocity() {
     var difficulty = document.getElementById('difficulty').value;
     switch (difficulty) {
         case 'easy':
-            ball.dx = 3;
-            ball.dy = -3;
+            ball.dx = 2; // Slower than before
+            ball.dy = -2;
             break;
         case 'regular':
-            ball.dx = 5;
-            ball.dy = -5;
+            ball.dx = 3; // Now the same as the old easy mode
+            ball.dy = -3;
             break;
         case 'hard':
-            ball.dx = 7;
-            ball.dy = -7;
+            ball.dx = 5; // Now the same as the old regular mode
+            ball.dy = -5;
             break;
     }
 }
