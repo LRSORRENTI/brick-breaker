@@ -35,7 +35,7 @@ function isColliding(ball: any, brick: any) {
   );
 }
 
-/// Function to update the ball's position and check for collisions
+// Function to update the ball's position and check for collisions
 function updateBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
@@ -55,7 +55,7 @@ function updateBall() {
   // Check for game over
   if (ball.y + ball.size > canvas.height) {
     alert('Game Over');
-    document.location.reload();
+    resetGame();
   }
 
   // Check for collision with bricks
@@ -71,6 +71,7 @@ function updateBall() {
     }
   }
 }
+
 // Paddle properties
 const paddle = {
     x: canvas.width / 2 - 40,
@@ -201,22 +202,6 @@ function startGame() {
 // Listen for clicks on the start button
 document.getElementById('startButton')?.addEventListener('click', startGame);
 
-  // Check for game over
-if (ball.y + ball.size > canvas.height) {
-  alert('Game Over');
-  setBallVelocity(); // Reset ball velocity for the new game
-  document.location.reload();
-}
-
-// Check for game over
-if (ball.y + ball.size > canvas.height) {
-  alert('Game Over');
-  gameStarted = false;
-  setBallVelocity(); // Reset ball velocity for the new game
-  // Show the start button again
-  (document.getElementById('startButton') as HTMLButtonElement).style.display = 'block';
-  document.location.reload();
-}
 
 // Update the game loop to check if the game has started
 function gameLoop() {
@@ -238,6 +223,24 @@ function gameLoop() {
 
   // Request the next animation frame
   requestAnimationFrame(gameLoop);
+}
+
+function resetGame() {
+  // Reset ball position and velocity
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height / 2;
+  setBallVelocity();
+
+  // Reset bricks
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      bricks[c][r].status = 1;
+    }
+  }
+
+  // Reset game state
+  gameStarted = false;
+  (document.getElementById('startButton') as HTMLButtonElement).style.display = 'block';
 }
 
   // Start the game
