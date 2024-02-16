@@ -7,6 +7,9 @@ const ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
 canvas.width = 800;
 canvas.height = 600;
 
+// Calculate the halfway mark on the y-axis
+let halfwayMark = canvas.height / 2;
+
 // Create Game Entities
 // Ball properties
 const ball = {
@@ -35,7 +38,7 @@ function isColliding(ball: any, brick: any) {
   );
 }
 // Function to update the ball's position and check for collisions
-// Function to update the ball's position and check for collisions
+
 function updateBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
@@ -44,6 +47,7 @@ function updateBall() {
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
     ball.dx *= -1;
   }
+
   // Check for collision with the paddle
   if (
     ball.y + ball.size > paddle.y &&
@@ -52,6 +56,7 @@ function updateBall() {
   ) {
     ball.dy *= -1;
   }
+
   // Check for game over
   if (ball.y + ball.size > canvas.height) {
     alert('Game Over');
@@ -65,7 +70,12 @@ function updateBall() {
       const brick = bricks[c][r];
       if (brick.status === 1) {
         if (isColliding(ball, brick)) {
-          ball.dy *= -1;
+          // Modify ball direction based on position relative to halfway mark
+          if (ball.y < halfwayMark) {
+            ball.dy = Math.abs(ball.dy); // Ensure ball moves downwards
+          } else {
+            ball.dy = -Math.abs(ball.dy); // Ensure ball moves upwards
+          }
           brick.status = 0;
           break brickLoop; // Break out of the loop after breaking one brick
         }
