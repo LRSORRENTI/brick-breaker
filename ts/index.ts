@@ -70,14 +70,12 @@ function updateBall() {
       const brick = bricks[c][r];
       if (brick.status === 1) {
         if (isColliding(ball, brick)) {
-          // Modify ball direction based on position relative to halfway mark
-          if (ball.y < halfwayMark) {
-            ball.dy = Math.abs(ball.dy); // Ensure ball moves downwards
-          } else {
-            ball.dy = -Math.abs(ball.dy); // Ensure ball moves upwards
+          ball.dy *= -1;
+          brick.hits += 1;
+          if (brick.hits >= 2) {
+            brick.status = 0;
           }
-          brick.status = 0;
-          break brickLoop; // Break out of the loop after breaking one brick
+          break brickLoop;
         }
       }
     }
@@ -110,34 +108,36 @@ const paddle = {
   const brickOffsetTop = 30;
   const brickOffsetLeft = 30;
   
-  const bricks: { x: number; y: number; status: number }[][] = [];
-  
+  const bricks: { x: number; y: number; status: number; hits: number }[][] = [];
+
   for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for (let r = 0; r < brickRowCount; r++) {
-      bricks[c][r] = { x: 0, y: 0, status: 1 };
+      bricks[c][r] = { x: 0, y: 0, status: 1, hits: 0 };
     }
   }
   
+  
   // Function to draw the bricks
   // Function to draw the bricks
-function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c++) {
-    for (let r = 0; r < brickRowCount; r++) {
-      if (bricks[c][r].status === 1) {
-        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
-        ctx.fill();
-        ctx.closePath();
+  function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+      for (let r = 0; r < brickRowCount; r++) {
+        if (bricks[c][r].status === 1) {
+          const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+          const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+          bricks[c][r].x = brickX;
+          bricks[c][r].y = brickY;
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, brickWidth, brickHeight);
+          ctx.fillStyle = bricks[c][r].hits === 1 ? '#FF1867' : '#0095DD';
+          ctx.fill();
+          ctx.closePath();
+        }
       }
     }
   }
-}
+  
 // Function to set ball velocity based on difficulty
 // Function to set ball velocity based on difficulty
 function setBallVelocity() {

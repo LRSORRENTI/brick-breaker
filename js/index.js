@@ -57,15 +57,12 @@ function updateBall() {
             var brick = bricks[c][r];
             if (brick.status === 1) {
                 if (isColliding(ball, brick)) {
-                    // Modify ball direction based on position relative to halfway mark
-                    if (ball.y < halfwayMark) {
-                        ball.dy = Math.abs(ball.dy); // Ensure ball moves downwards
+                    ball.dy *= -1;
+                    brick.hits += 1;
+                    if (brick.hits >= 2) {
+                        brick.status = 0;
                     }
-                    else {
-                        ball.dy = -Math.abs(ball.dy); // Ensure ball moves upwards
-                    }
-                    brick.status = 0;
-                    break brickLoop; // Break out of the loop after breaking one brick
+                    break brickLoop;
                 }
             }
         }
@@ -98,7 +95,7 @@ var bricks = [];
 for (var c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for (var r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+        bricks[c][r] = { x: 0, y: 0, status: 1, hits: 0 };
     }
 }
 // Function to draw the bricks
@@ -113,7 +110,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = '#0095DD';
+                ctx.fillStyle = bricks[c][r].hits === 1 ? '#FF1867' : '#0095DD';
                 ctx.fill();
                 ctx.closePath();
             }
