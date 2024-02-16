@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: rgba(189, 189, 189, 0.95);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .h1-wrapper {
@@ -33,6 +33,38 @@ body {
   font-weight: 900;
   text-shadow: 1px 1px 2px rgb(153, 255, 0), 0 0 0.1em rgb(230, 251, 199),
     0 0 0.2em rgb(0, 0, 0);
+}
+
+.difficulty-selector {
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+#startButton {
+  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  background-color: #333333;
+  color: #99ff00;
+  border: 4px solid #99ff00;
+  transition: 0.3s ease;
+  font-weight: 900;
+  box-shadow: rgb(0, 0, 0) -1px 7px 7px -5px;
+}
+
+#startButton:hover {
+  cursor: pointer;
+  background-color: #99ff00;
+  color: #333333;
+  border: 4px solid #333333;
 }
 
 #canvas {
