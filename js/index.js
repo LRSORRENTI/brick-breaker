@@ -79,7 +79,7 @@ var paddle = {
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddle.x, paddle.y, paddle.width, paddle.height);
-    ctx.fillStyle = '#0095DD';
+    ctx.fillStyle = '#99ff00';
     ctx.fill();
     ctx.closePath();
 }

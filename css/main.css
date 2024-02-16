@@ -37,13 +37,26 @@ body {
 
 .difficulty-selector {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   margin: auto;
-  width: 200px;
+  width: 300px;
   margin-bottom: 10px;
 }
 
+#difficulty {
+  background-color: #333333;
+  color: #fff;
+}
+
+.label {
+  background-color: #333333;
+  color: rgb(153, 255, 0);
+  font-size: 20px;
+  font-weight: 900;
+}
+
 #startButton {
+  display: flex;
   margin: auto;
   margin-top: 5px;
   margin-bottom: 5px;
