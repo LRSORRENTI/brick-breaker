@@ -1,10 +1,23 @@
+:root {
+  --dark: #020611;
+  --slate: #343b57;
+  --purp: #494cd1;
+  --blue: #65ade8;
+  --white: #f4feff;
+  --darkTeal: #003b46;
+  --teal: #07575b;
+  --lightTeal: #61a4ad;
+  --whiteTeal: #c0dee5;
+}
+
 * {
   margin: 0;
   padding: 0;
 }
 
 body {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--whiteTeal);
+  font-family: sans-serif;
 }
 
 .h1-wrapper {
@@ -17,7 +30,7 @@ body {
 #h1 {
   display: flex;
   justify-content: center;
-  color: rgb(153, 255, 0);
+  color: var(--lightTeal);
   background-color: #333333;
   font-size: 15px;
   padding-top: 5px;
@@ -25,34 +38,52 @@ body {
   width: 400px;
   text-align: center;
   margin-top: 5px;
-  border: 3px solid #99ff00;
+  border: 3px solid var(--teal);
   border-radius: 10px;
   box-shadow: rgb(0, 0, 0) -1px 10px 10px -8px;
   transition: 0.5s ease;
   font-family: sans-serif;
   font-weight: 900;
-  text-shadow: 1px 1px 2px rgb(153, 255, 0), 0 0 0.1em rgb(230, 251, 199),
-    0 0 0.2em rgb(0, 0, 0);
 }
 
 .difficulty-selector {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin: auto;
-  width: 300px;
+  width: 312px;
   margin-bottom: 10px;
 }
 
 #difficulty {
   background-color: #333333;
-  color: #fff;
+  color: var(--lightTeal);
+  border: 3px solid var(--lightTeal);
+  font-weight: 900;
+  border-radius: 5px;
+  width: 110px;
+  text-align: center;
+  font-size: 15px;
+  box-shadow: rgb(0, 0, 0) -1px 7px 7px -5px;
+}
+#difficulty:hover {
+  cursor: pointer;
+}
+
+#difficulty > option {
+  cursor: pointer;
+  font-weight: 900;
 }
 
 .label {
   background-color: #333333;
-  color: rgb(153, 255, 0);
+  color: var(--lightTeal);
+  border: 3px solid var(--lightTeal);
   font-size: 20px;
   font-weight: 900;
+  border-radius: 7px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: rgb(0, 0, 0) -1px 7px 7px -5px;
 }
 
 #startButton {
