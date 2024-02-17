@@ -208,7 +208,10 @@ let gameStarted = false;
 function startGame() {
   gameStarted = true;
   // Hide the start button
-  (document.getElementById('startButton') as HTMLButtonElement).style.display = 'none';
+  // (document.getElementById('startButton') as HTMLButtonElement).style.display = 'none';
+  // NOTE THE ABOVE CAUSES WEIRD STYLING EFFECTS 
+  // IF UNCOMMENTED, HIDING THE START BUTTON MAKES 
+  // THE ENTIRE CANVAS SHIFT
 }
 
 // Listen for clicks on the start button
